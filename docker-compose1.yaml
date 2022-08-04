@@ -1,0 +1,63 @@
+version: "3.8"
+networks:
+  vote:
+    driver: bridge
+
+
+
+services:
+  vote: 
+    image: paulogugas/vote:v1
+    build: 
+      context: ./vote
+      dockerfile: Dockerfile.1
+    ports:
+      - 80
+    depends_on: 
+      - redis
+    networks:
+      - vote 
+
+
+  redis:
+    image: redis:alpine
+    networks:
+      - vote 
+    
+
+
+
+  worker:
+    image: paulogugas/worker
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.multistage
+    depends_on:
+      - redis
+      - db
+    networks:
+      - vote
+
+
+
+  db:
+    image: postgres:12-alpine
+    networks:
+      - vote
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust  
+    
+
+
+  result:
+    image: paulogugas/result
+    build:
+      context: ./result
+      dockerfile: Dockerfile.1
+    ports:
+      - 80
+    depends_on:
+      - db
+      
+    networks:
+      - vote
