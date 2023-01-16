@@ -5,7 +5,7 @@ pipeline {
   stages {
     
     stage('worker-build') {
-      agent any
+      
         
           image 'maven:3.8.5-jdk-11-slim'
           args '-v $HOME/.m2:/root/.m2'
