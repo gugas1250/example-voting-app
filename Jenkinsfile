@@ -1,6 +1,6 @@
 pipeline {
 
-  agent any
+  agent none
 
   stages {
     
@@ -12,7 +12,7 @@ pipeline {
     }
     }
   }
-      }
+      
       when {
         changeset '**/worker/**'
       }
